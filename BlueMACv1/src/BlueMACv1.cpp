@@ -1,3 +1,9 @@
+/******************************************************/
+//       THIS IS A GENERATED FILE - DO NOT EDIT       //
+/******************************************************/
+
+#include "Particle.h"
+#line 1 "c:/Users/vcox/Documents/IoT/SuvaCapstone/BlueMACv1/src/BlueMACv1.ino"
 /*
  * Project BlueInTheFace2
  * Description: BLE Scanner
@@ -5,6 +11,9 @@
  * Date: 27-MAR-2023
  */
 // Create BLE Scanner Object
+void setup();
+void loop();
+#line 8 "c:/Users/vcox/Documents/IoT/SuvaCapstone/BlueMACv1/src/BlueMACv1.ino"
 const byte SCAN_RESULT_MAX = 40;
 BleScanResult scanResults[SCAN_RESULT_MAX];
 // Declare Variables
