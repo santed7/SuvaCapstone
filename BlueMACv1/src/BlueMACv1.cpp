@@ -11,9 +11,12 @@
  * Date: 27-MAR-2023
  */
 // Create BLE Scanner Object
+
+#include <Adafruit_BME280.h>
+
 void setup();
 void loop();
-#line 8 "c:/Users/vcox/Documents/IoT/SuvaCapstone/BlueMACv1/src/BlueMACv1.ino"
+#line 11 "c:/Users/vcox/Documents/IoT/SuvaCapstone/BlueMACv1/src/BlueMACv1.ino"
 const byte SCAN_RESULT_MAX = 40;
 BleScanResult scanResults[SCAN_RESULT_MAX];
 // Declare Variables
@@ -21,11 +24,15 @@ byte count, i,j;
 byte buf[BLE_MAX_ADV_DATA_LEN];
 byte mac[SCAN_RESULT_MAX][6];
 int8_t rssi[SCAN_RESULT_MAX];
+BleAdvertisingData data;
+
+
 SYSTEM_MODE(MANUAL);
 void setup() {
     Serial.begin(9600);
     waitFor(Serial.isConnected,10000);
     BLE.on();
+     BLE.advertise(&data);
 }
 void loop() {
     // Only scan for 500 milliseconds
