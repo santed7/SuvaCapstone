@@ -35,6 +35,7 @@ int busNmbr[]={24,19,53,77,25};
 const int busBuzz=D5;//vibr buzzer
 int busFind;
 int busName;
+int busHold;
 
 #if (SSD1306_LCDHEIGHT != 64)
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
@@ -69,7 +70,7 @@ void loop() {
    if (busSe<0){
     busSe=0;
    }
-
+busName=busNmbr[busSe];
 
 switch (busName) {
   case 24:
@@ -92,8 +93,28 @@ switch (busName) {
 
    Serial.printf("Bus is %i near:\n", busNmbr[busSe]);
    display.display();
-           
-           if(busNmbr[3] == busName) {
+
+
+  // listen for incoming lora messages and then send GPS back
+  if (Serial1.available())  { // full incoming buffer: +RCV=203,50,35.08,9,-36,41 
+    String parse0 = Serial1.readStringUntil('=');  //+RCV
+    String parse1 = Serial1.readStringUntil(',');  // address received from
+    String parse2 = Serial1.readStringUntil(',');  // buffer length
+    String parse3 = Serial1.readStringUntil(',');  // fuseSound
+    String parse4 = Serial1.readStringUntil(',');  // fuseDust
+    String parse5 = Serial1.readStringUntil(',');  // rssi
+    String parse6 = Serial1.readStringUntil(','); // snr
+    String parse7 = Serial1.readStringUntil('\n'); // busNmbr
+    String parse8 = Serial1.readString();          // extra
+
+    Serial.printf("parse0: %s\nparse1: %s\nparse2: %s\nparse3: %s\nparse4: %s\nparse5: %s\nparse6: %s\nparse7: %s\nparse8: %s\n", parse0.c_str(), parse1.c_str(), parse2.c_str(), parse3.c_str(), parse4.c_str(), parse5.c_str(), parse6.c_str(), parse7.c_str(), parse8.c_str());
+    delay(100);
+     myTimer.startTimer(5000);
+      digitalWrite(D7,HIGH);
+
+           busHold=atoi(parse7.c_str());   
+
+           if(busHold == busName) {
             display.clearDisplay();
             display.setTextSize(2);
             display.setTextColor(WHITE);
@@ -106,22 +127,6 @@ switch (busName) {
          delay(7350);
          digitalWrite(busBuzz,LOW);
        }
-
-  // listen for incoming lora messages and then send GPS back
-  if (Serial1.available())  { // full incoming buffer: +RCV=203,50,35.08,9,-36,41 
-    String parse0 = Serial1.readStringUntil('=');  //+RCV
-    String parse1 = Serial1.readStringUntil(',');  // address received from
-    String parse2 = Serial1.readStringUntil(',');  // buffer length
-    String parse3 = Serial1.readStringUntil(',');  // fuseSound
-    String busName = Serial1.readStringUntil(',');  // fuseDust
-    String parse5 = Serial1.readStringUntil(',');  // rssi
-    String parse6 = Serial1.readStringUntil('\n'); // snr
-    String parse7 = Serial1.readString();          // extra
-
-    Serial.printf("parse0: %s\nparse1: %s\nparse2: %s\nparse3: %s\nbusName: %s\nparse5: %s\nparse6: %s\nparse7: %s\n", parse0.c_str(), parse1.c_str(), parse2.c_str(), parse3.c_str(), busName.c_str(), parse5.c_str(), parse6.c_str(), parse7.c_str());
-    delay(100);
-     myTimer.startTimer(5000);
-      digitalWrite(D7,HIGH);
 
 
     display.clearDisplay();

@@ -27,6 +27,7 @@ const int SENDADDRESS = 302;   // address of radio to be sent to
 // Declare Variables
 float lat,lon,alt;
 int sat;
+const int busNumbr=53;
 
 
 void setup() {
@@ -44,7 +45,7 @@ void setup() {
   delay(1000);
   GPS.println(PMTK_Q_RELEASE);
 
-
+sendData(busName, lat, lon, sat);
   delay(2000);
 }
 
@@ -87,7 +88,10 @@ void loop() {
   if (myTimer.isTimerReady()){
          digitalWrite(D7,LOW);
   }
+sendData(busName, lat, lon, sat);
+  delay(17000);
 }
+
 
 void getGPS(float *latitude, float *longitude, float *altitude, int *satellites) {
   int theHour;
@@ -112,7 +116,7 @@ void sendData(String name, float latitude, float longitude, int satelittes) {
   char buffer[60];
 
   Serial.printf("Sending GPS Data back to IoT Base Station\n");
-  sprintf(buffer, "AT+SEND=%i,60,%f,%f,%i,%s\r\n", SENDADDRESS, latitude, longitude, satelittes, name.c_str());
+  sprintf(buffer, "AT+SEND=%i,60,%f,%f,%i,%s,%i\r\n", SENDADDRESS, latitude, longitude, satelittes, name.c_str(), busNumbr);
   Serial1.printf("%s",buffer);
   Serial.printf("%s",buffer);
   //Serial1.println(buffer); 

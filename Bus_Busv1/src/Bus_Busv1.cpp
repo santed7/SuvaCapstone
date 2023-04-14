@@ -28,7 +28,7 @@ IoTTimer myTimer;
 
 // Define User and Credentials
 String password = "AA4104132968BA2224299079021594AB"; // AES128 password
-String myName = "Bus 53";
+String busName = "53";
 const int RADIOADDRESS = 0xC2; // Get address from Instructor, it will be a value between 0xC1 - 0xCF
 const int TIMEZONE = -6;
 
@@ -39,6 +39,7 @@ const int SENDADDRESS = 302;   // address of radio to be sent to
 // Declare Variables
 float lat,lon,alt;
 int sat;
+const int busNumbr=53;
 
 
 void setup() {
@@ -56,7 +57,7 @@ void setup() {
   delay(1000);
   GPS.println(PMTK_Q_RELEASE);
 
-
+sendData(busName, lat, lon, sat);
   delay(2000);
 }
 
@@ -87,10 +88,10 @@ void loop() {
     getGPS(&lat,&lon,&alt,&sat);
 
     if(lat != 0) {
-      sendData(myName, lat, lon, sat);
+      sendData(busName, lat, lon, sat);
     }
     else {
-      sendData(myName, 33.400322, -104.534897, 0);
+      sendData(busName, 33.400322, -104.534897, 0);
     }
 
 
@@ -99,7 +100,10 @@ void loop() {
   if (myTimer.isTimerReady()){
          digitalWrite(D7,LOW);
   }
+sendData(busName, lat, lon, sat);
+  delay(17000);
 }
+
 
 void getGPS(float *latitude, float *longitude, float *altitude, int *satellites) {
   int theHour;
@@ -124,7 +128,7 @@ void sendData(String name, float latitude, float longitude, int satelittes) {
   char buffer[60];
 
   Serial.printf("Sending GPS Data back to IoT Base Station\n");
-  sprintf(buffer, "AT+SEND=%i,60,%f,%f,%i,%s\r\n", SENDADDRESS, latitude, longitude, satelittes, name.c_str());
+  sprintf(buffer, "AT+SEND=%i,60,%f,%f,%i,%s,%i\r\n", SENDADDRESS, latitude, longitude, satelittes, name.c_str(), busNumbr);
   Serial1.printf("%s",buffer);
   Serial.printf("%s",buffer);
   //Serial1.println(buffer); 
