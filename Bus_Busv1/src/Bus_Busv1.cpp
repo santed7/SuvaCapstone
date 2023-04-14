@@ -12,7 +12,7 @@
  */
 
 
-#include "Adafruit_SSD1306.h"
+
 #include <Adafruit_GPS.h>
 #include <IoTClassroom_CNM.h>
  
@@ -23,12 +23,12 @@ void sendData(String name, float latitude, float longitude, int satelittes);
 void reyaxSetup(String password);
 #line 13 "c:/Users/vcox/Documents/IoT/SuvaCapstone/Bus_Busv1/src/Bus_Busv1.ino"
 Adafruit_GPS GPS(&Wire);
-Adafruit_SSD1306 display(-1);
+
 IoTTimer myTimer;
 
 // Define User and Credentials
 String password = "AA4104132968BA2224299079021594AB"; // AES128 password
-String myName = "DrVernonCox";
+String myName = "Bus 53";
 const int RADIOADDRESS = 0xC2; // Get address from Instructor, it will be a value between 0xC1 - 0xCF
 const int TIMEZONE = -6;
 
@@ -56,8 +56,7 @@ void setup() {
   delay(1000);
   GPS.println(PMTK_Q_RELEASE);
 
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); 
-  display.display(); // show splashscreen
+
   delay(2000);
 }
 
@@ -94,12 +93,7 @@ void loop() {
       sendData(myName, 33.400322, -104.534897, 0);
     }
 
-    display.clearDisplay();
-    display.setTextSize(2);
-    display.setTextColor(WHITE);
-    display.setCursor(0,0);
-    display.printf("%+10.5f%+10.5f%10.2fSat: %i\n",lat, lon, alt, sat);
-    display.display();
+
   }
  
   if (myTimer.isTimerReady()){

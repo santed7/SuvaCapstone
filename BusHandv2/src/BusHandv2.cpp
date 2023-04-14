@@ -44,6 +44,7 @@ int busSe;
 int busNmbr[]={24,19,53,77,25};
 const int busBuzz=D5;//vibr buzzer
 int busFind;
+int busName;
 
 #if (SSD1306_LCDHEIGHT != 64)
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
@@ -69,12 +70,40 @@ void setup() {
 void loop() {
 
    //busNmbr=busEnc.read(busNmbr);
-   busFind=busEnc.read(busNmbr);
-   busEnc.write(95);
-   busFind=map(busNmbr,0,95,0,5);
+   busFind=busEnc.read();
+   //Serial.printf(" %i \n", busFind);
+   busSe=map(busFind,0,95,0,4);
+   if (busSe>4){
+    busSe=4;
+   }
+   if (busSe<0){
+    busSe=0;
+   }
+
+
+switch (busName) {
+  case 24:
+    printf("Bus24");
+    break;
+  case 19:
+    printf("Bus19");
+    break;
+  case 53:
+    printf("Bus53");
+    break;
+  case 77:
+    printf("Bus77");
+    break;
+  case 25:
+    printf("Bus25");
+    break;
+
+}
+
+   Serial.printf("Bus is %i near:\n", busNmbr[busSe]);
    display.display();
            
-           if(busNmbr == busSe) {
+           if(busNmbr[3] == busName) {
             display.clearDisplay();
             display.setTextSize(2);
             display.setTextColor(WHITE);
@@ -94,12 +123,12 @@ void loop() {
     String parse1 = Serial1.readStringUntil(',');  // address received from
     String parse2 = Serial1.readStringUntil(',');  // buffer length
     String parse3 = Serial1.readStringUntil(',');  // fuseSound
-    String parse4 = Serial1.readStringUntil(',');  // fuseDust
+    String busName = Serial1.readStringUntil(',');  // fuseDust
     String parse5 = Serial1.readStringUntil(',');  // rssi
     String parse6 = Serial1.readStringUntil('\n'); // snr
     String parse7 = Serial1.readString();          // extra
 
-    Serial.printf("parse0: %s\nparse1: %s\nparse2: %s\nparse3: %s\nparse4: %s\nparse5: %s\nparse6: %s\nparse7: %s\n", parse0.c_str(), parse1.c_str(), parse2.c_str(), parse3.c_str(), parse4.c_str(), parse5.c_str(), parse6.c_str(), parse7.c_str());
+    Serial.printf("parse0: %s\nparse1: %s\nparse2: %s\nparse3: %s\nbusName: %s\nparse5: %s\nparse6: %s\nparse7: %s\n", parse0.c_str(), parse1.c_str(), parse2.c_str(), parse3.c_str(), busName.c_str(), parse5.c_str(), parse6.c_str(), parse7.c_str());
     delay(100);
      myTimer.startTimer(5000);
       digitalWrite(D7,HIGH);
