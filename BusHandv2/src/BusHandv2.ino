@@ -1,5 +1,5 @@
 /*
- * Project L14_04_LoRaGPS
+ * Project Capstone
  * Description: Starter Code for utilizing LoRa
  * Author: Brian Rashap and Christian Chavez _ Modified by Vernon Cox
  * Date: 24-MAR-2023 _ 12Apr23
@@ -30,9 +30,10 @@ const int SENDADDRESS = 302;   // address of radio to be sent to
 // Declare Variables
 float lat,lon,alt;
 int sat;
-int busSe=53;
-int busNmbr[5]= {24,19,53,77,25};
+int busSe;
+int busNmbr[]={24,19,53,77,25};
 const int busBuzz=D5;//vibr buzzer
+int busFind;
 
 #if (SSD1306_LCDHEIGHT != 64)
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
@@ -57,10 +58,13 @@ void setup() {
 
 void loop() {
 
-   busNmbr=busEnc.read();
+   //busNmbr=busEnc.read(busNmbr);
+   busFind=busEnc.read(busNmbr);
+   busEnc.write(1);
+   busFind=map(busNmbr,0,95,0,5);
    display.display();
            
-           if(busSe=busNmbr) {
+           if(busNmbr == busSe) {
             display.clearDisplay();
             display.setTextSize(2);
             display.setTextColor(WHITE);
@@ -68,18 +72,12 @@ void loop() {
             display.printf("Bus %i is coming\n",busNmbr);
             display.display();
         
-
+          //using these lines to activate vibr motor
          digitalWrite(busBuzz,HIGH);
          delay(7350);
          digitalWrite(busBuzz,LOW);
        }
-  // Get data from GSP unit (best if you do this continuously)
-  // GPS.read();
-  // if (GPS.newNMEAreceived()) {
-  //   if (!GPS.parse(GPS.lastNMEA())) {
-  //     return;
-  //   }   
-  // }
+
   // listen for incoming lora messages and then send GPS back
   if (Serial1.available())  { // full incoming buffer: +RCV=203,50,35.08,9,-36,41 
     String parse0 = Serial1.readStringUntil('=');  //+RCV
