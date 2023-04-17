@@ -12,16 +12,17 @@
  */
 
 
-
-#include <Adafruit_GPS.h>
-#include <IoTClassroom_CNM.h>
- 
 void setup();
 void loop();
 void getGPS(float *latitude, float *longitude, float *altitude, int *satellites);
 void sendData(String name, float latitude, float longitude, int satelittes);
 void reyaxSetup(String password);
-#line 13 "c:/Users/vcox/Documents/IoT/SuvaCapstone/Bus_Busv1/src/Bus_Busv1.ino"
+#line 9 "c:/Users/vcox/Documents/IoT/SuvaCapstone/Bus_Busv1/src/Bus_Busv1.ino"
+SYSTEM_MODE(SEMI_AUTOMATIC);
+
+#include <Adafruit_GPS.h>
+#include <IoTClassroom_CNM.h>
+ 
 Adafruit_GPS GPS(&Wire);
 
 IoTTimer myTimer;
@@ -34,7 +35,7 @@ const int TIMEZONE = -6;
 
 // Define Constants
 const int RADIONETWORK = 4;    // range of 0-16
-const int SENDADDRESS = 0;   // address of radio to be sent to
+const int SENDADDRESS =0 ;   // address of radio to be sent to
 
 // Declare Variables
 float lat,lon,alt;
@@ -48,6 +49,7 @@ void setup() {
 
   Serial1.begin(115200);
   reyaxSetup(password);
+  delay(10000);
 
   //Initialize GPS
   GPS.begin(0x10);  // The I2C address to use is 0x10
@@ -57,38 +59,35 @@ void setup() {
   delay(1000);
   GPS.println(PMTK_Q_RELEASE);
 
-sendData(busName, lat, lon, sat);
+//sendData(busName, lat, lon, sat);
   delay(2000);
 }
 
 void loop() {
   // Get data from GSP unit (best if you do this continuously)
   GPS.read();
-    getGPS(&lat,&lon,&alt,&sat);
-      Serial.printf("Time: %02i:%02i:%03i\n", GPS.minute, GPS.seconds, GPS.milliseconds);
-  Serial.printf("Dates: %02i-%02i-%02i\n", GPS.month, GPS.day, GPS.year);
-  Serial.printf("Fix: %i, Quality: %i", (int)GPS.fix, (int)GPS.fixquality);
 
-  // if (GPS.newNMEAreceived()) {
-  //   if (!GPS.parse(GPS.lastNMEA())) {
-  //     return;
-  //   }   
-  // }
+
+  if (GPS.newNMEAreceived()) {
+    if (!GPS.parse(GPS.lastNMEA())) {
+      return;
+    }   
+  }
   // listen for incoming lora messages and then send GPS back
-  if (Serial1.available())  { // full incoming buffer: +RCV=203,50,35.08,9,-36,41 
-    String parse0 = Serial1.readStringUntil('=');  //+RCV
-    String parse1 = Serial1.readStringUntil(',');  // address received from
-    String parse2 = Serial1.readStringUntil(',');  // buffer length
-    String parse3 = Serial1.readStringUntil(',');  // fuseSound
-    String parse4 = Serial1.readStringUntil(',');  // fuseDust
-    String parse5 = Serial1.readStringUntil(',');  // rssi
-    String parse6 = Serial1.readStringUntil('\n'); // snr
-    String parse7 = Serial1.readString();          // extra
+  // if (Serial1.available())  { // full incoming buffer: +RCV=203,50,35.08,9,-36,41 
+  //   String parse0 = Serial1.readStringUntil('=');  //+RCV
+  //   String parse1 = Serial1.readStringUntil(',');  // address received from
+  //   String parse2 = Serial1.readStringUntil(',');  // buffer length
+  //   String parse3 = Serial1.readStringUntil(',');  // fuseSound
+  //   String parse4 = Serial1.readStringUntil(',');  // fuseDust
+  //   String parse5 = Serial1.readStringUntil(',');  // rssi
+  //   String parse6 = Serial1.readStringUntil('\n'); // snr
+  //   String parse7 = Serial1.readString();          // extra
 
-    Serial.printf("parse0: %s\nparse1: %s\nparse2: %s\nparse3: %s\nparse4: %s\nparse5: %s\nparse6: %s\nparse7: %s\n", parse0.c_str(), parse1.c_str(), parse2.c_str(), parse3.c_str(), parse4.c_str(), parse5.c_str(), parse6.c_str(), parse7.c_str());
-    delay(100);
-     myTimer.startTimer(5000);
-      digitalWrite(D7,HIGH);
+  //   Serial.printf("parse0: %s\nparse1: %s\nparse2: %s\nparse3: %s\nparse4: %s\nparse5: %s\nparse6: %s\nparse7: %s\n", parse0.c_str(), parse1.c_str(), parse2.c_str(), parse3.c_str(), parse4.c_str(), parse5.c_str(), parse6.c_str(), parse7.c_str());
+  //   delay(100);
+  //    myTimer.startTimer(5000);
+  //     digitalWrite(D7,HIGH);
 
     getGPS(&lat,&lon,&alt,&sat);
 
@@ -100,12 +99,12 @@ void loop() {
     }
 
 
-  }
+  //}
  
   if (myTimer.isTimerReady()){
          digitalWrite(D7,LOW);
   }
-sendData(busName, lat, lon, sat);
+//sendData(busName, lat, lon, sat);
   delay(17000);
 }
 
@@ -130,10 +129,10 @@ void getGPS(float *latitude, float *longitude, float *altitude, int *satellites)
 }
 
 void sendData(String name, float latitude, float longitude, int satelittes) {
-  char buffer[62];
+  char buffer[60];
 
   Serial.printf("Sending GPS Data to bus station\n");
-  sprintf(buffer, "AT+SEND=%i,60,%f,%f,%i,%s, I am bus#: %i\r\n", SENDADDRESS, latitude, longitude, satelittes, name.c_str(), busNumbr);
+  sprintf(buffer, "AT+SEND=%i,60,%f,%f,%i,%s\r\n", SENDADDRESS, latitude, longitude, satelittes, name.c_str());
   Serial1.printf("%s",buffer);
   Serial.printf("%s",buffer);
   //Serial1.println(buffer); 

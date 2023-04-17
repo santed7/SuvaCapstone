@@ -30,12 +30,13 @@ const int SENDADDRESS = 0;   // address of radio to be sent to
 // Declare Variables
 float lat,lon,alt;
 int sat;
-int busSe;
+static int busSe;
 int busNmbr[]={24,19,53,77,25};
 const int busBuzz=D5;//vibr buzzer
 int busFind;
 int busName;
 int busHold;
+int mappedBus;
 
 #if (SSD1306_LCDHEIGHT != 64)
 #error("Height incorrect, please fix Adafruit_SSD1306.h!");
@@ -44,55 +45,60 @@ SYSTEM_MODE(SEMI_AUTOMATIC);
 
 
 void setup() {
+  Serial.begin(9600);
+  waitFor(Serial.isConnected, 5000);
+  Serial1.begin(115200);
+  reyaxSetup(password);
+  delay(10000);
 
   pinMode(busBuzz,OUTPUT);
   digitalWrite(busBuzz,HIGH);
-  Serial.begin(9600);
-  waitFor(Serial.isConnected, 5000);
+
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C); 
   display.display(); // show splashscreen
 
-
-  Serial1.begin(115200);
-  reyaxSetup(password);
 
 }
 
 void loop() {
 
    //busNmbr=busEnc.read(busNmbr);
-   busFind=busEnc.read();
+   mappedBus=busEnc.read();
+   busFind=map(mappedBus, 0,4,0,1);
+   
    //Serial.printf(" %i \n", busFind);
-   busSe=map(busFind,0,95,0,4);
-   if (busSe>4){
-    busSe=4;
+   //busSe=map(busFind,0,95,0,4);
+   if (busFind>4){
+    busFind=4;
    }
-   if (busSe<0){
-    busSe=0;
+   if (busFind<0){
+    busFind=0;
    }
-busName=busNmbr[busSe];
+   //Serial.printf(" %i \n", busFind);
+busName=busNmbr[busFind];
+Serial.printf(" %i \n", busName);
 
-switch (busName) {
-  case 24:
-    printf("Bus24");
-    break;
-  case 19:
-    printf("Bus19");
-    break;
-  case 53:
-    printf("Bus53");
-    break;
-  case 77:
-    printf("Bus77");
-    break;
-  case 25:
-    printf("Bus25");
-    break;
+// switch (busName) {
+//   case 24:
+//     printf("Bus24");
+//     break;
+//   case 19:
+//     printf("Bus19");
+//     break;
+//   case 53:
+//     printf("Bus53");
+//     break;
+//   case 77:
+//     printf("Bus77");
+//     break;
+//   case 25:
+//     printf("Bus25");
+//     break;
 
-}
+// }
 
-   Serial.printf("Bus is %i near:\n", busNmbr[busSe]);
-   display.display();
+  //  Serial.printf("Bus is %i near:\n", busNmbr[busSe]);
+  //  display.display();
 
 
   // listen for incoming lora messages and then send GPS back
@@ -109,37 +115,38 @@ switch (busName) {
 
     Serial.printf("parse0: %s\nparse1: %s\nparse2: %s\nparse3: %s\nparse4: %s\nparse5: %s\nparse6: %s\nparse7: %s\nparse8: %s\n", parse0.c_str(), parse1.c_str(), parse2.c_str(), parse3.c_str(), parse4.c_str(), parse5.c_str(), parse6.c_str(), parse7.c_str(), parse8.c_str());
     delay(100);
-     myTimer.startTimer(5000);
+      myTimer.startTimer(5000);
       digitalWrite(D7,HIGH);
 
-           busHold=atoi(parse7.c_str());   
-
+           busHold=atoi(parse6.c_str());   
+          Serial.printf("bushold %i ", busHold);
            if(busHold == busName) {
             display.clearDisplay();
             display.setTextSize(2);
             display.setTextColor(WHITE);
             display.setCursor(0,0);
-            display.printf("Bus %i is coming\n",busNmbr);
+            display.printf("Bus %i is coming\n",busHold);
             display.display();
         
-          //using these lines to activate vibr motor
-         digitalWrite(busBuzz,HIGH);
-         delay(7350);
-         digitalWrite(busBuzz,LOW);
-       }
+  //         //using these lines to activate vibr motor
+  //        digitalWrite(busBuzz,HIGH);
+  //        delay(7350);
+  //        digitalWrite(busBuzz,LOW);
+  //      }
 
 
-    display.clearDisplay();
-    display.setTextSize(2);
-    display.setTextColor(WHITE);
-    display.setCursor(0,0);
-    display.printf("%+10.5f%+10.5f%10.2fSat: %i\n",lat, lon, alt, sat);
-    display.display();
-  }
+  //   // display.clearDisplay();
+  //   // display.setTextSize(2);
+  //   // display.setTextColor(WHITE);
+  //   // display.setCursor(0,0);
+  //   // display.printf("%+10.5f%+10.5f%10.2fSat: %i\n",lat, lon, alt, sat);
+  //   // display.display();
+  // }
  
-  if (myTimer.isTimerReady()){
-         digitalWrite(D7,LOW);
-  }
+  // if (myTimer.isTimerReady()){
+  //        digitalWrite(D7,LOW);
+   }
+}
 }
 
 
