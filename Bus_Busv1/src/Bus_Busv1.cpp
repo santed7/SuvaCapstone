@@ -33,8 +33,8 @@ const int RADIOADDRESS = 0xC2; // Get address from Instructor, it will be a valu
 const int TIMEZONE = -6;
 
 // Define Constants
-const int RADIONETWORK = 7;    // range of 0-16
-const int SENDADDRESS = 302;   // address of radio to be sent to
+const int RADIONETWORK = 4;    // range of 0-16
+const int SENDADDRESS = 0;   // address of radio to be sent to
 
 // Declare Variables
 float lat,lon,alt;
@@ -64,11 +64,16 @@ sendData(busName, lat, lon, sat);
 void loop() {
   // Get data from GSP unit (best if you do this continuously)
   GPS.read();
-  if (GPS.newNMEAreceived()) {
-    if (!GPS.parse(GPS.lastNMEA())) {
-      return;
-    }   
-  }
+    getGPS(&lat,&lon,&alt,&sat);
+      Serial.printf("Time: %02i:%02i:%03i\n", GPS.minute, GPS.seconds, GPS.milliseconds);
+  Serial.printf("Dates: %02i-%02i-%02i\n", GPS.month, GPS.day, GPS.year);
+  Serial.printf("Fix: %i, Quality: %i", (int)GPS.fix, (int)GPS.fixquality);
+
+  // if (GPS.newNMEAreceived()) {
+  //   if (!GPS.parse(GPS.lastNMEA())) {
+  //     return;
+  //   }   
+  // }
   // listen for incoming lora messages and then send GPS back
   if (Serial1.available())  { // full incoming buffer: +RCV=203,50,35.08,9,-36,41 
     String parse0 = Serial1.readStringUntil('=');  //+RCV
@@ -125,10 +130,10 @@ void getGPS(float *latitude, float *longitude, float *altitude, int *satellites)
 }
 
 void sendData(String name, float latitude, float longitude, int satelittes) {
-  char buffer[60];
+  char buffer[62];
 
-  Serial.printf("Sending GPS Data back to IoT Base Station\n");
-  sprintf(buffer, "AT+SEND=%i,60,%f,%f,%i,%s,%i\r\n", SENDADDRESS, latitude, longitude, satelittes, name.c_str(), busNumbr);
+  Serial.printf("Sending GPS Data to bus station\n");
+  sprintf(buffer, "AT+SEND=%i,60,%f,%f,%i,%s, I am bus#: %i\r\n", SENDADDRESS, latitude, longitude, satelittes, name.c_str(), busNumbr);
   Serial1.printf("%s",buffer);
   Serial.printf("%s",buffer);
   //Serial1.println(buffer); 

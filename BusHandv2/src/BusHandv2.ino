@@ -20,12 +20,12 @@ Encoder busEnc(D12,D11); //This is where the A and B pin are mapped.
 // Define User and Credentials
 String password = "AA4104132968BA2224299079021594AB"; // AES128 password
 String myName = "DrVernonCox";
-const int RADIOADDRESS = 0xC2; // Get address from Instructor, it will be a value between 0xC1 - 0xCF
+const int RADIOADDRESS = 0xC6; // Get address from Instructor, it will be a value between 0xC1 - 0xCF
 const int TIMEZONE = -6;
 
 // Define Constants
-const int RADIONETWORK = 7;    // range of 0-16
-const int SENDADDRESS = 302;   // address of radio to be sent to
+const int RADIONETWORK = 4;    // range of 0-16
+const int SENDADDRESS = 0;   // address of radio to be sent to
 
 // Declare Variables
 float lat,lon,alt;
