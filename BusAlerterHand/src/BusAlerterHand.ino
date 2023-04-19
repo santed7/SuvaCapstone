@@ -1,6 +1,6 @@
 /*
- * Project Capstone
- * Description: Starter Code for utilizing LoRa
+ * Project Capstone: BusAlerter
+ * Description: BusConnection prototype
  * Author: Brian Rashap and Christian Chavez _ Modified by Edward Ishman and Vernon Cox
  * Date: 24-MAR-2023 _ 21Apr23
  */
@@ -11,7 +11,7 @@
 #include <IoTClassroom_CNM.h>
 #define OLED_RESET D4
  
-//Adafruit_GPS GPS(&Wire);
+//Adafruit_OLED
 Adafruit_SSD1306 display(OLED_RESET);
 IoTTimer myTimer;
 
@@ -62,44 +62,18 @@ void setup() {
 
 void loop() {
 
-   //busNmbr=busEnc.read(busNmbr);
    mappedBus=busEnc.read();
    busFind=map(mappedBus, 0,4,0,1);
-   
-   //Serial.printf(" %i \n", busFind);
-   //busSe=map(busFind,0,95,0,4);
+ 
    if (busFind>4){
     busFind=4;
    }
    if (busFind<0){
     busFind=0;
    }
-   //Serial.printf(" %i \n", busFind);
+ 
 busName=busNmbr[busFind];
 Serial.printf(" %i \n", busName);
-
-// switch (busName) {
-//   case 24:
-//     printf("Bus24");
-//     break;
-//   case 19:
-//     printf("Bus19");
-//     break;
-//   case 53:
-//     printf("Bus53");
-//     break;
-//   case 77:
-//     printf("Bus77");
-//     break;
-//   case 25:
-//     printf("Bus25");
-//     break;
-
-// }
-
-  //  Serial.printf("Bus is %i near:\n", busNmbr[busSe]);
-  //  display.display();
-
 
   // listen for incoming lora messages and then send GPS back
   if (Serial1.available())  { // full incoming buffer: +RCV=203,50,35.08,9,-36,41 
@@ -132,19 +106,7 @@ Serial.printf(" %i \n", busName);
          digitalWrite(busBuzz,HIGH);
          delay(7350);
          digitalWrite(busBuzz,LOW);
-  //      }
-
-
-  //   // display.clearDisplay();
-  //   // display.setTextSize(2);
-  //   // display.setTextColor(WHITE);
-  //   // display.setCursor(0,0);
-  //   // display.printf("%+10.5f%+10.5f%10.2fSat: %i\n",lat, lon, alt, sat);
-  //   // display.display();
-  // }
- 
-  // if (myTimer.isTimerReady()){
-  //        digitalWrite(D7,LOW);
+  
    }
 }
 }
