@@ -41,7 +41,7 @@ const int SENDADDRESS = 0;   // address of radio to be sent to
 float lat,lon,alt;
 int sat;
 static int busSe;
-int busNmbr[]={24,19,53,77,25};
+int busNmbr[]={53,53,53,53,53,53};
 const int busBuzz=D5;//vibr buzzer
 int busFind;
 int busName;
@@ -138,10 +138,10 @@ Serial.printf(" %i \n", busName);
             display.printf("Bus %i is coming\n",busHold);
             display.display();
         
-  //         //using these lines to activate vibr motor
-  //        digitalWrite(busBuzz,HIGH);
-  //        delay(7350);
-  //        digitalWrite(busBuzz,LOW);
+          //using these lines to activate vibr motor
+         digitalWrite(busBuzz,HIGH);
+         delay(7350);
+         digitalWrite(busBuzz,LOW);
   //      }
 
 
