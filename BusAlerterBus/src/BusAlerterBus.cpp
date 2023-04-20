@@ -1,11 +1,23 @@
+/******************************************************/
+//       THIS IS A GENERATED FILE - DO NOT EDIT       //
+/******************************************************/
+
+#include "Particle.h"
+#line 1 "c:/Users/Vernon/Documents/IoT/SuvaCapstone/BusAlerterBus/src/BusAlerterBus.ino"
 /*
  * Project Capstone_BusAlerter
  * Description: BusConnection prototype
- * Modified by Vernon Cox and Edward Ishman Authored by: Brian Rashap and Christian Chavez
+ * Author: Brian Rashap and Christian Chavez _ Modified by Edward Ishman and Vernon Cox
  * Date: 24-MAR-2023 _ 21Apr23
  */
 
 
+void setup();
+void loop();
+void getGPS(float *latitude, float *longitude, float *altitude, int *satellites);
+void sendData(String name, float latitude, float longitude, int satelittes);
+void reyaxSetup(String password);
+#line 9 "c:/Users/Vernon/Documents/IoT/SuvaCapstone/BusAlerterBus/src/BusAlerterBus.ino"
 SYSTEM_MODE(SEMI_AUTOMATIC);
 
 #include <Adafruit_GPS.h>

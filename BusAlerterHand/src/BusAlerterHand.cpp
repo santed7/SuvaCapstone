@@ -1,7 +1,13 @@
+/******************************************************/
+//       THIS IS A GENERATED FILE - DO NOT EDIT       //
+/******************************************************/
+
+#include "Particle.h"
+#line 1 "c:/Users/Vernon/Documents/IoT/SuvaCapstone/BusAlerterHand/src/BusAlerterHand.ino"
 /*
  * Project Capstone: BusAlerter
  * Description: BusConnection prototype
- * Modified by Vernon Cox and Edward Ishman Authored by: Brian Rashap and Christian Chavez
+ * Author: Brian Rashap and Christian Chavez _ Modified by Edward Ishman and Vernon Cox
  * Date: 24-MAR-2023 _ 21Apr23
  */
 
@@ -9,6 +15,10 @@
 #include "Adafruit_SSD1306.h"
 #include "Encoder.h"
 #include <IoTClassroom_CNM.h>
+void setup();
+void loop();
+void reyaxSetup(String password);
+#line 12 "c:/Users/Vernon/Documents/IoT/SuvaCapstone/BusAlerterHand/src/BusAlerterHand.ino"
 #define OLED_RESET D4
  
 //Adafruit_OLED
