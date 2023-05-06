@@ -7,7 +7,7 @@
 /*
  * Project Capstone_BusAlerter
  * Description: BusConnection prototype
- * Author: Brian Rashap and Christian Chavez _ Modified by Edward Ishman and Vernon Cox
+ * Modified by Vernon Cox and Edward Ishman Authored by: Brian Rashap and Christian Chavez
  * Date: 24-MAR-2023 _ 21Apr23
  */
 
